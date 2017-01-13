@@ -36,7 +36,14 @@ object MyModule {
 
   // Exercise 1: Write a function to compute the nth fibonacci number
 
-  def fib(n: Int): Int = ???
+  def fib(n: Int) : Int = {
+    @annotation.tailrec
+    def go(n: Int, x: Int, y: Int): Int = {
+      if (n <= 1) y
+      else go(n-1, y, x+y)
+    }
+    go(n, 0, 1)
+  }
 
   // This definition and `formatAbs` are very similar..
   private def formatFactorial(n: Int) = {
@@ -120,6 +127,21 @@ object MonomorphicBinarySearch {
 
 object PolymorphicFunctions {
 
+  def main(args: Array[String]): Unit = {
+    val ar1 = Array(1,2,3,4,5)
+    // should print true
+    println(isSorted(ar1, (x: Int, y: Int) => x <= y))
+    val ar2 = Array(1,2,4,3,5)
+    // should print false (example with a trait)
+    val isSmaller = new Function2[Int, Int, Boolean] {
+      def apply(a: Int, b: Int) = a < b
+    }
+    println(isSorted(ar2, isSmaller))
+
+    println("** is sorted tes, should print 1**")
+    println(findFirst(Array(1, 5, 13), (x: Int) => x == 5))
+  }
+
   // Here's a polymorphic version of `binarySearch`, parameterized on
   // a function for testing whether an `A` is greater than another `A`.
   def binarySearch[A](as: Array[A], key: A, gt: (A,A) => Boolean): Int = {
@@ -138,9 +160,28 @@ object PolymorphicFunctions {
     go(0, 0, as.length - 1)
   }
 
+  def findFirst[A](as: Array[A], p: A => Boolean): Int = {
+    @annotation.tailrec
+    def loop(n: Int): Int =
+      if (n >= as.length) -1
+      else if (p(as(n))) n
+      else loop(n + 1)
+
+    loop(0)
+  }
+
   // Exercise 2: Implement a polymorphic function to check whether
   // an `Array[A]` is sorted
-  def isSorted[A](as: Array[A], gt: (A,A) => Boolean): Boolean = ???
+  def isSorted[A](as: Array[A], gt: (A,A) => Boolean): Boolean = {
+    @annotation.tailrec
+    def loop(n: Int): Boolean = {
+      if ( n + 1 >= as.length) true
+      else if (!gt(as(n), as(n+1))) false
+      else loop(n + 1)
+    }
+
+    loop(0)
+  }
 
   // Polymorphic functions are often so constrained by their type
   // that they only have one implementation! Here's an example:
@@ -153,13 +194,13 @@ object PolymorphicFunctions {
   // Note that `=>` associates to the right, so we could
   // write the return type as `A => B => C`
   def curry[A,B,C](f: (A, B) => C): A => (B => C) =
-    ???
+    a => b => f(a,b)
 
   // NB: The `Function2` trait has a `curried` method already
 
   // Exercise 4: Implement `uncurry`
   def uncurry[A,B,C](f: A => B => C): (A, B) => C =
-    ???
+    (a, b) => f(a)(b)
 
   /*
   NB: There is a method on the `Function` object in the standard library,
@@ -174,5 +215,8 @@ object PolymorphicFunctions {
   // Exercise 5: Implement `compose`
 
   def compose[A,B,C](f: B => C, g: A => B): A => C =
-    ???
+    // ou f compose g
+    // ou g andThen f
+    a => f(g(a))
+
 }
