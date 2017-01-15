@@ -86,9 +86,99 @@ object List { // `List` companion object. Contains functions for creating and wo
   def length[A](l: List[A]): Int =
     foldRight(l, 0)( ( _ , res) => res + 1)
 
+  @annotation.tailrec
+  def foldLeft[A,B](l: List[A], z: B)(f: (B, A) => B): B =
+    l match {
+      case Nil => z
+      case Cons(h, t) => foldLeft(t, f(z, h))(f)
+    }
 
-  def foldLeft[A,B](l: List[A], z: B)(f: (B, A) => B): B = sys.error("todo")
+  def sumFoldLeft(l: List[Int]): Int = {
+    foldLeft(l, 0)((x, y) => x + y)
+  }
 
-  def map[A,B](l: List[A])(f: A => B): List[B] = sys.error("todo")
+  def productFoldLeft(l: List[Double]): Double = {
+    foldLeft(l, 1.0)(_ * _)
+  }
+
+  def lenghtFoldLeft[A](l: List[A]): Int = {
+    foldLeft(l, 0)((y, x) => y + 1)
+  }
+
+
+
+  def reverse[A](l: List[A]): List[A] = foldLeft(l, List[A]())((acc, h) => Cons(h, acc))
+
+  def appendFoldRight[A](l: List[A], l2: List[A]): List[A] = {
+    foldRight(l, l2)(Cons(_,_))
+  }
+
+  def concat[A](l: List[List[A]]): List[A] = {
+    foldRight(l, List[A]())((x,y) => append(x,y))
+  }
+
+  def addOne(l: List[Int]): List[Int] = {
+    foldRight(l, List[Int]())((h,t) => Cons(h+1, t))
+  }
+
+  def doubleToString(l: List[Double]): List[String] =
+    foldRight(l, List[String]())((h,t) => Cons(h.toString, t))
+
+  def map[A,B](l: List[A])(f: A => B): List[B] = {
+    foldRight(l, List[B]())((h, t) => Cons(f(h), t))
+  }
+
+  def map_without_stack[A, B](l: List[A])(f: A => B): List[B] = {
+    val buff = new collection.mutable.ListBuffer[B]
+    @annotation.tailrec
+    def loop(l: List[A]): Unit =
+      l match {
+        case Nil => List[B]()
+        case Cons(h,t) => buff += f(h); loop(t)
+      }
+    loop(l)
+    List(buff.toList: _*) // convert the buff list to our type of list
+  }
+
+  def filter[A](as: List[A])(f: A => Boolean): List[A] = {
+    val buff = new collection.mutable.ListBuffer[A]
+    def loop(as: List[A]): Unit =
+      as match {
+        case Nil => List[A]()
+        case Cons(h, t) => if(!f(h)) buff += h; loop(t)
+      }
+    loop(as)
+    List(buff.toList: _*) // convert the buff list to our type of list
+  }
+
+  def flatMap[A,B](as: List[A])(f: A => List[B]): List[B] = {
+    val buff = new collection.mutable.ListBuffer[List[B]]
+    @annotation.tailrec
+    def loop(l: List[A]): Unit =
+      l match {
+        case Nil => List[B]()
+        case Cons(h,t) => buff += f(h); loop(t)
+      }
+    loop(as)
+
+    concat(List(buff.toList: _*)) // convert the buff list to our type of list, and concat the resulting list
+  }
+
+  def filterViaFlatmap[A](as: List[A])(f: A => Boolean): List[A] = {
+    flatMap(as)(a => if (f(a)) Nil else List(a) )
+  }
+
+  def addingElements(a: List[Int], b: List[Int]): List[Int] = (a, b) match {
+    case (_,Nil) => Nil
+    case (Nil, _) => Nil
+    case (Cons(ah, at), Cons(bh, bt)) => Cons(ah+bh, addingElements(at,bt))
+  }
+
+  def zipWith[A,B,C](a: List[A], b: List[B])(f: (A,B) => C): List[C] = (a,b) match {
+    case (_,Nil) => Nil
+    case (Nil, _) => Nil
+    case (Cons(ah, at), Cons(bh, bt)) => Cons(f(ah,bh), zipWith(at,bt)(f))
+  }
+
 
 }
