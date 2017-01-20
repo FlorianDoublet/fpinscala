@@ -180,5 +180,25 @@ object List { // `List` companion object. Contains functions for creating and wo
     case (Cons(ah, at), Cons(bh, bt)) => Cons(f(ah,bh), zipWith(at,bt)(f))
   }
 
+  def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean =  {
+
+    @annotation.tailrec
+    def loop[A](sup: List[A], sub: List[A], matching: Boolean): Boolean =  {
+      (sup, sub, matching) match {
+        case (_, Nil, true) => true
+        case (_, Nil, false) => false
+        case (Nil, _, _) => false
+        case (Cons(h1, t1), Cons(h2, t2), true) =>  if (h1 == h2) loop(t1, t2, true) else false
+        case (Cons(h1, t1), Cons(h2, t2), false) => if (h1 == h2) loop(t1, t2, true) else loop(t1, sub, false)
+      }
+    }
+
+    (sup, sub) match  {
+      case (_,Nil) => false
+      case (Nil, _) => false
+      case (_, _) => if (length(sup) >= length(sub)) loop(sup, sub, false) else false
+    }
+  }
+
 
 }

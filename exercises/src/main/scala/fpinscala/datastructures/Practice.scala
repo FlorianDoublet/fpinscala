@@ -61,6 +61,16 @@ object Practice {
 
     val addingElementZip = List.zipWith(l1, List(4,5,6))((x,y) => (x + y).toString )
     println("should be 5,7,9 : " + addingElementZip)
+
+    println("**** test hasSubsequence ****\n")
+
+    println("should be true : " + List.hasSubsequence(List(1,2,3,4), List(1)))
+    println("should be true : " + List.hasSubsequence(List(1,2,3,4), List(1, 2)))
+    println("should be true : " + List.hasSubsequence(List(1,2,3,4), List(2, 3)))
+    println("should be true : " + List.hasSubsequence(List(1,2,3,4), List(4)))
+    println("should be false : " + List.hasSubsequence(List(1,2,3,4), List(1, 3)))
+    println("should be false : " + List.hasSubsequence(List(1,2,3,4), List(1,2,3,4,5)))
+
   }
 
 }
