@@ -7,7 +7,7 @@ object Practice {
 
   def main(args: Array[String]): Unit = {
     // should print 3
-    println(List.x)
+    /*println(List.x)
 
     val l1 = List(1,2,3)
     val l2 = List(4, 5)
@@ -69,7 +69,18 @@ object Practice {
     println("should be true : " + List.hasSubsequence(List(1,2,3,4), List(2, 3)))
     println("should be true : " + List.hasSubsequence(List(1,2,3,4), List(4)))
     println("should be false : " + List.hasSubsequence(List(1,2,3,4), List(1, 3)))
-    println("should be false : " + List.hasSubsequence(List(1,2,3,4), List(1,2,3,4,5)))
+    println("should be false : " + List.hasSubsequence(List(1,2,3,4), List(1,2,3,4,5)))*/
+
+    val simpleTree = Branch( Branch(Leaf(1), Branch(Leaf(4), Leaf(100))), Leaf(3))
+    println("size should be 7 : " + Tree.size(simpleTree))
+    println("size should be 7 : " + Tree.sizeViaFold(simpleTree))
+
+    println("size should be 100 : " + Tree.maximum(simpleTree))
+    println("size should be 100 : " + Tree.maximumViaFold(simpleTree))
+
+    println("size should be 3 : " + Tree.depth(simpleTree))
+    println("size should be 3 : " + Tree.depthViaFold(simpleTree))
+
 
   }
 
