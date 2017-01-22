@@ -3,7 +3,7 @@ package fpinscala.errorhandling
 /**
   * Created by flori on 21/01/2017.
   */
-object Practice {
+object PracticeOption {
 
 
   /**
@@ -29,6 +29,7 @@ object Practice {
   def parseInts(a: List[String]): Option[List[Int]] =
     Option.traverse(a)((x: String) => Try(x.toInt))
 
+
   def main(args: Array[String]): Unit = {
     println(parseInsuranceRateQuote("2", "6"))
     val listOpt = List(Some(1), Some(2), Some(3))
@@ -39,3 +40,5 @@ object Practice {
   }
 
 }
+
+
