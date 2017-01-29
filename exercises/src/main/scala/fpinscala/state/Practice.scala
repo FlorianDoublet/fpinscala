@@ -1,5 +1,6 @@
 package fpinscala.state
 
+import fpinscala.state
 import fpinscala.state.RNG.Simple
 
 /**
@@ -15,5 +16,10 @@ object Practice {
     println(RNG.randIntDouble(rng))
     println(RNG.ints2(2)(rng))
     println(RNG.nonNegativeLessThan(6)(rng))
+
+    val machine = Machine(true,2,0)
+    val s: State[Machine, (Int, Int)] = Candy.simulateMachine(List(Coin, Turn))
+    println(s.run(machine))
+
   }
 }
