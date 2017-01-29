@@ -13,5 +13,7 @@ object Practice {
     println(RNG.int(rng))
     println(RNG.doubleViaMap(rng)._1)
     println(RNG.randIntDouble(rng))
+    println(RNG.ints2(2)(rng))
+    println(RNG.nonNegativeLessThan(6)(rng))
   }
 }
